@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Lista de Artículos</title>
+</h:head>
+<h:body>
+    <h:form id="form">
+        <p:growl id="growl" showDetail="true" sticky="false" life="3000" />
+        
+        <p:sidebar widgetVar="sidebarBasket" position="right" style="width: 450px;">
+            <h3>Mi Cesta</h3>
+            <p:dataTable id="cestaDT" value="#{articuloBean.cesta}" var="item" emptyMessage="La cesta está vacía">
+                <p:column headerText="Descripción">
+                    <h:outputText value="#{item.descripcion}" />
+                </p:column>
+                <p:column headerText="Cant." style="width:110px">
+                    <p:spinner value="#{articuloBean.cantidadesMap[item.codigo]}" min="1" max="999" size="3">
+                        <f:converter converterId="jakarta.faces.Integer" />
+                        <p:ajax process="@this" update=":form:growl" />
+                    </p:spinner>
+                </p:column>
+                <p:column style="width:40px">
+                    <p:commandLink action="#{articuloBean.toggleCesta(item)}" update=":form:articulosDT :form:cestaDT :form:cestaBtnContainer :form:growl" process="@this">
+                        <i class="pi pi-trash" style="color:red"></i>
+                    </p:commandLink>
+                </p:column>
+            </p:dataTable>
+        </p:sidebar>
+
+        <p:panel header="Artículos Disponibles">
+            <h:panelGroup id="cestaBtnContainer" layout="block" style="text-align: right; margin-bottom: 10px;">
+                <p:commandButton value="Ver Cesta (#{articuloBean.cesta.size()})" icon="pi pi-shopping-cart" 
+                                 onclick="PF('sidebarBasket').show()" id="cestaBtn" style="margin-right: 10px;" />
+                <p:commandButton value="Tramitar pedido" action="#{articuloBean.tramitarPedido}" 
+                                 id="tramitarBtn" icon="pi pi-check"
+                                 disabled="#{articuloBean.cesta.isEmpty()}" />
+            </h:panelGroup>
+            <p:messages globalOnly="true" showDetail="false" showSummary="true" closable="true">
+                <p:autoUpdate />
+            </p:messages>
+
+            <p:dataTable id="articulosDT" value="#{articuloBean.articulos}" var="articulo" 
+                         selection="#{articuloBean.articulosSeleccionados}" rowKey="#{articulo.codigo}"
+                         emptyMessage="No se encontraron artículos en la tabla 'articulos'."
+                         stripedRows="true" paginator="true" rows="10"
+                         sortBy="#{articulo.descripcion}" sortOrder="ascending"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} artículos"
+                         widgetVar="articulosTable">
+                
+
+
+                <p:column style="width:40px;text-align:center">
+                    <p:selectBooleanCheckbox id="selectAllEntities" value="#{articuloBean.seleccionMap[articulo.codigo]}">
+                        <p:ajax process="@this" listener="#{articuloBean.toggleCesta(articulo)}" 
+                                update=":form:articulosDT :form:cestaDT :form:cestaBtnContainer :form:growl" />
+                    </p:selectBooleanCheckbox>
+                </p:column>
+                <p:column headerText="Código" style="width:80px;text-align:center">
+                    <h:outputText value="#{articulo.codigo}" />
+                </p:column>
+
+                <p:column headerText="Descripción" sortBy="#{articulo.descripcion}">
+                    <h:outputText value="#{articulo.descripcion}" />
+                </p:column>
+
+                <p:column headerText="Venta" style="text-align:right">
+                    <h:outputText value="#{articulo.venta}" />
+                </p:column>
+
+                <p:column headerText="Stock" style="text-align:right">
+                    <h:outputText value="#{articulo.stock}" />
+                </p:column>
+            </p:dataTable>
+        </p:panel>
+    </h:form>
+</h:body>
+</html>

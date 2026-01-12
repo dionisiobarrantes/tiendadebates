@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Iniciar Sesión</title>
+</h:head>
+<h:body>
+    <h:form>
+        <p:panel header="Login" style="width: 400px; margin: 0 auto;">
+            <p:messages globalOnly="true" showDetail="false" showSummary="true" closable="true">
+                <p:autoUpdate />
+            </p:messages>
+            
+            <h:panelGrid columns="3" cellpadding="5">
+                <p:outputLabel for="nombre" value="Nombre:" />
+                <p:inputText id="nombre" value="#{loginBean.nombre}" required="true" 
+                             requiredMessage="El nombre es obligatorio" />
+                <p:message for="nombre" display="text" />
+
+                <p:outputLabel for="password" value="Password:" />
+                <p:password id="password" value="#{loginBean.password}" required="true" 
+                             requiredMessage="La contraseña es obligatoria" toggleMask="true" />
+                <p:message for="password" display="text" />
+
+                <f:facet name="footer">
+                    <p:commandButton value="Entrar" action="#{loginBean.login}" update="@form" style="width: 100%" />
+                </f:facet>
+            </h:panelGrid>
+        </p:panel>
+    </h:form>
+</h:body>
+</html>
