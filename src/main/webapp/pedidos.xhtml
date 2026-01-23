@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Lista de Pedidos</title>
+</h:head>
+<h:body>
+    <h:form id="form">
+        <p:panel header="Pedidos Realizados">
+            <h:panelGroup layout="block" style="margin-bottom: 10px;">
+                <p:commandButton value="Volver a Artículos" icon="pi pi-arrow-left" action="index?faces-redirect=true" />
+            </h:panelGroup>
+
+            <p:dataTable id="pedidosDT" value="#{pedidoBean.pedidos}" var="pedido"
+                         emptyMessage="No se encontraron pedidos."
+                         stripedRows="true" paginator="true" rows="10"
+                         sortBy="#{pedido.idpedido}" sortOrder="descending"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} pedidos">
+
+                <p:column headerText="ID Pedido" sortBy="#{pedido.idpedido}" style="width:100px;text-align:center">
+                    <h:outputText value="#{pedido.idpedido}" />
+                </p:column>
+
+                <p:column headerText="ID Cliente" sortBy="#{pedido.cliente}" style="width:100px;text-align:center">
+                    <h:outputText value="#{pedido.cliente}" />
+                </p:column>
+                
+                <p:column headerText="Nombre Cliente" sortBy="#{pedido.nombrecliente}">
+                    <h:outputText value="#{pedido.nombrecliente}" />
+                </p:column>
+
+                <p:column headerText="Fecha Pedido" sortBy="#{pedido.fechapedido}" style="text-align:center">
+                    <h:outputText value="#{pedido.fechapedido}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Acciones" style="width:150px;text-align:center">
+                    <p:commandButton value="Ver detalle pedido" icon="pi pi-search" 
+                                     action="#{pedidoBean.verDetalles(pedido)}" 
+                                     update=":form:detallePedidoDialog" 
+                                     oncomplete="PF('detallePedidoDialog').show()" />
+                </p:column>
+            </p:dataTable>
+        </p:panel>
+
+        <p:dialog id="detallePedidoDialog" header="Detalles del Pedido ##{pedidoBean.selectedPedido.idpedido}" 
+                  widgetVar="detallePedidoDialog" modal="true" resizable="false" width="700">
+            <p:messages id="dialogMessages" showDetail="true" closable="true" />
+            <p:outputPanel id="detallePedidoPanel" rendered="#{not empty pedidoBean.selectedPedido}">
+                <p:dataTable value="#{pedidoBean.detalles}" var="linea" emptyMessage="No hay líneas en este pedido.">
+                    <p:column headerText="Artículo (Código)">
+                        <h:outputText value="#{linea.idarticulo}" />
+                    </p:column>
+                    <p:column headerText="Descripción">
+                        <h:outputText value="#{linea.descripcion}" />
+                    </p:column>
+                    <p:column headerText="Cantidad">
+                        <h:outputText value="#{linea.cantidad}" />
+                    </p:column>
+                    <p:column headerText="Enviado" style="text-align:center">
+                        <p:selectBooleanCheckbox value="#{linea.enviado}" />
+                    </p:column>
+                </p:dataTable>
+                <div style="margin-top: 15px; text-align: right;">
+                    <p:commandButton value="Guardar Cambios" icon="pi pi-save" 
+                                     action="#{pedidoBean.guardarCambiosLineas}" 
+                                     update="dialogMessages" />
+                    <p:commandButton value="Cerrar" icon="pi pi-times" 
+                                     onclick="PF('detallePedidoDialog').hide()" 
+                                     style="margin-left: 5px;" />
+                </div>
+            </p:outputPanel>
+        </p:dialog>
+    </h:form>
+</h:body>
+</html>

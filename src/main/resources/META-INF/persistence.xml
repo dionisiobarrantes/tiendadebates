@@ -10,9 +10,11 @@
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <!-- Configuración específica de EclipseLink -->
-            <property name="eclipselink.target-database" value="MySQL"/>
+            <property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.MySQLPlatform"/>
             <property name="eclipselink.logging.level" value="FINE"/>
             <property name="eclipselink.logging.parameters" value="true"/>
+            <property name="eclipselink.jdbc.uppercase-columns" value="false"/>
+            <property name="eclipselink.id-validation" value="NULL"/>
             
             <!-- Delimitadores para identificadores -->
             <property name="eclipselink.jpa.uppercase-column-names" value="false"/>

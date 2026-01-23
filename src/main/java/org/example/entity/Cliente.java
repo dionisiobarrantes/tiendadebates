@@ -28,6 +28,9 @@ public class Cliente {
     @Column(name = "territorio")
     private String territorio;
 
+    @Column(name = "administrador")
+    private Integer administrador;
+
     public Cliente() {
     }
 
@@ -77,5 +80,13 @@ public class Cliente {
 
     public void setTerritorio(String territorio) {
         this.territorio = territorio;
+    }
+
+    public Integer getAdministrador() {
+        return administrador;
+    }
+
+    public void setAdministrador(Integer administrador) {
+        this.administrador = administrador;
     }
 }
