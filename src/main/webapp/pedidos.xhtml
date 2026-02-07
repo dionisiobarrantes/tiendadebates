@@ -66,6 +66,13 @@
                         <p:selectBooleanCheckbox value="#{linea.enviado}" />
                     </p:column>
                 </p:dataTable>
+                
+                <h:panelGrid columns="1" style="width: 100%; margin-top: 15px;">
+                    <h:outputText value="Observaciones:" style="font-weight: bold;" />
+                    <p:inputTextarea value="#{pedidoBean.selectedPedido.observaciones}" 
+                                     readonly="true" rows="3" style="width: 100%; background-color: #f8f9fa;" />
+                </h:panelGrid>
+
                 <div style="margin-top: 15px; text-align: right;">
                     <p:commandButton value="Guardar Cambios" icon="pi pi-save" 
                                      action="#{pedidoBean.guardarCambiosLineas}" 

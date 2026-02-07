@@ -7,6 +7,7 @@ import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import org.example.entity.Cliente;
 import java.io.Serializable;
 
@@ -30,7 +31,7 @@ public class LoginBean implements Serializable {
                     .getSingleResult();
 
             if (usuarioLogueado != null) {
-                return "index?faces-redirect=true";
+                return "confirmarDireccion?faces-redirect=true";
             }
         } catch (NoResultException e) {
             FacesContext.getCurrentInstance().addMessage(null,
@@ -41,6 +42,19 @@ public class LoginBean implements Serializable {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Transactional
+    public String actualizarDireccionYEntrar() {
+        try {
+            em.merge(usuarioLogueado);
+            return "index?faces-redirect=true";
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al actualizar la dirección", null));
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public boolean isAdministrador() {

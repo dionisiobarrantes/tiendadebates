@@ -12,6 +12,7 @@
         <p:growl id="growl" showDetail="true" sticky="false" life="3000" />
         
         <p:sidebar widgetVar="sidebarBasket" position="right" style="width: 450px;">
+            <p:ajax event="close" update="@this" />
             <h3>Mi Cesta</h3>
             <p:dataTable id="cestaDT" value="#{articuloBean.cesta}" var="item" emptyMessage="La cesta está vacía">
                 <p:column headerText="Descripción">
@@ -29,6 +30,15 @@
                     </p:commandLink>
                 </p:column>
             </p:dataTable>
+            
+            <h:panelGrid columns="1" style="width: 100%; margin-top: 15px;">
+                <p:outputLabel for="observaciones" value="Observaciones del pedido:" />
+                <p:inputTextarea id="observaciones" value="#{articuloBean.observaciones}" 
+                                 rows="3" style="width: 100%" 
+                                 placeholder="Añada notas adicionales aquí...">
+                    <p:ajax event="blur" process="@this" />
+                </p:inputTextarea>
+            </h:panelGrid>
         </p:sidebar>
 
         <p:panel header="Artículos Disponibles">

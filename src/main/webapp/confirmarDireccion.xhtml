@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Confirmar Dirección</title>
+</h:head>
+<h:body>
+    <h:form>
+        <p:panel header="Confirmar su dirección" style="width: 500px; margin: 50px auto;">
+            <p:messages globalOnly="true" showDetail="false" showSummary="true" closable="true">
+                <p:autoUpdate />
+            </p:messages>
+            
+            <h:panelGrid columns="2" cellpadding="5" style="width: 100%">
+                <p:outputLabel for="direccion" value="Dirección:" />
+                <p:inputText id="direccion" value="#{loginBean.usuarioLogueado.direccion}" 
+                             required="true" requiredMessage="La dirección es obligatoria"
+                             style="width: 100%" />
+                
+                <f:facet name="footer">
+                    <p:commandButton value="Entrar" action="#{loginBean.actualizarDireccionYEntrar}" 
+                                     update="@form" style="width: 100%" />
+                </f:facet>
+            </h:panelGrid>
+        </p:panel>
+    </h:form>
+</h:body>
+</html>

@@ -42,6 +42,7 @@ public class ArticuloBean implements Serializable {
     private List<Articulo> cesta = new java.util.ArrayList<>();
     private java.util.Map<Integer, Boolean> seleccionMap = new java.util.HashMap<>();
     private java.util.Map<Integer, Integer> cantidadesMap = new java.util.HashMap<>();
+    private String observaciones;
 
     @PostConstruct
     public void init() {
@@ -85,6 +86,14 @@ public class ArticuloBean implements Serializable {
 
     public void setArticulosSeleccionados(List<Articulo> articulosSeleccionados) {
         this.articulosSeleccionados = articulosSeleccionados;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 
     public List<Articulo> getCesta() {
@@ -191,6 +200,7 @@ public class ArticuloBean implements Serializable {
             pedido.setNombrecliente(nombreDb);
             
             pedido.setFechapedido(new Date());
+            pedido.setObservaciones(observaciones);
             
             // Intento de forzar que no se envíe idpedido si fuera 0 por defecto
             pedido.setIdpedido(null);
@@ -245,6 +255,12 @@ public class ArticuloBean implements Serializable {
             }
             emailBody.append("</table>");
             emailBody.append("<p>Total artículos: ").append(cesta.size()).append("</p>");
+            
+            // Incluir dirección del cliente al final
+            String direccionCli = em.createQuery("SELECT c.direccion FROM Cliente c WHERE c.idclientes = :id", String.class)
+                    .setParameter("id", loginBean.getUsuarioLogueado().getIdclientes())
+                    .getSingleResult();
+            emailBody.append("<p>Dirección de entrega: ").append(direccionCli != null ? direccionCli : "No especificada").append("</p>");
 
             try {
                 enviarCorreo("administracion@debatesysolidaridad.org", "Nuevo Pedido #" + pedido.getIdpedido() + " - Tienda Debates", emailBody.toString());
@@ -265,6 +281,7 @@ public class ArticuloBean implements Serializable {
             cesta.clear();
             seleccionMap.clear();
             cantidadesMap.clear();
+            observaciones = null;
             // Actualizar mapa de selección para la vista (todos a false)
             for (Articulo a : articulos) {
                 seleccionMap.put(a.getCodigo(), false);

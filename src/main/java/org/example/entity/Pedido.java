@@ -22,6 +22,9 @@ public class Pedido {
     @Column(name = "nombrecliente")
     private String nombrecliente;
 
+    @Column(name = "observaciones")
+    private String observaciones;
+
     public Pedido() {
     }
 
@@ -55,5 +58,13 @@ public class Pedido {
 
     public void setNombrecliente(String nombrecliente) {
         this.nombrecliente = nombrecliente;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 }
