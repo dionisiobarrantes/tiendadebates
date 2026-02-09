@@ -16,6 +16,7 @@ import jakarta.transaction.UserTransaction;
 import org.example.entity.Articulo;
 import org.example.entity.LineasPedido;
 import org.example.entity.Pedido;
+import org.example.entity.Direccion;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -257,10 +258,18 @@ public class ArticuloBean implements Serializable {
             emailBody.append("<p>Total artículos: ").append(cesta.size()).append("</p>");
             
             // Incluir dirección del cliente al final
-            String direccionCli = em.createQuery("SELECT c.direccion FROM Cliente c WHERE c.idclientes = :id", String.class)
-                    .setParameter("id", loginBean.getUsuarioLogueado().getIdclientes())
-                    .getSingleResult();
-            emailBody.append("<p>Dirección de entrega: ").append(direccionCli != null ? direccionCli : "No especificada").append("</p>");
+            String direccionFull = "No especificada";
+            try {
+                Direccion d = em.createQuery("SELECT d FROM Direccion d WHERE d.idcliente = :id", Direccion.class)
+                        .setParameter("id", loginBean.getUsuarioLogueado().getIdclientes())
+                        .getSingleResult();
+                if (d != null) {
+                    direccionFull = d.getCalle() + ", " + d.getPoblacion() + " (" + d.getCodpostal() + "), " + d.getProvincia();
+                }
+            } catch (Exception e) {
+                // Dejar "No especificada"
+            }
+            emailBody.append("<p>Dirección de entrega: ").append(direccionFull).append("</p>");
 
             try {
                 enviarCorreo("administracion@debatesysolidaridad.org", "Nuevo Pedido #" + pedido.getIdpedido() + " - Tienda Debates", emailBody.toString());

@@ -44,8 +44,11 @@
         <p:panel header="Artículos Disponibles">
             <h:panelGroup id="cestaBtnContainer" layout="block" style="text-align: right; margin-bottom: 10px;">
                 <p:commandButton value="Ver Pedidos" icon="pi pi-list" 
-                                 rendered="#{loginBean.administrador}" style="margin-right: 10px; float: left;"
+                                 rendered="#{loginBean.usuarioLogueado != null}" style="margin-right: 10px; float: left;"
                                  action="pedidos?faces-redirect=true" />
+                <p:commandButton value="Ver Direcciones" icon="pi pi-home" 
+                                 rendered="#{loginBean.administrador}" style="margin-right: 10px; float: left;"
+                                 action="direcciones?faces-redirect=true" />
                 <p:commandButton value="Ver Cesta (#{articuloBean.cesta.size()})" icon="pi pi-shopping-cart" 
                                  onclick="PF('sidebarBasket').show()" id="cestaBtn" style="margin-right: 10px;" />
                 <p:commandButton value="Tramitar pedido" action="#{articuloBean.tramitarPedido}" 
@@ -54,6 +57,8 @@
                                  update=":form:articulosDT :form:cestaDT :form:cestaBtnContainer :form:growl"
                                  onstart="console.log('Tramitando...');"
                                  oncomplete="console.log('Tramitación finalizada.');" />
+                <p:commandButton value="Salir" icon="pi pi-sign-out" 
+                                 action="#{loginBean.logout}" style="margin-left: 10px; background-color: #f8d7da; color: #721c24; border-color: #f5c6cb;" />
             </h:panelGroup>
             <p:messages globalOnly="true" showDetail="false" showSummary="true" closable="true">
                 <p:autoUpdate />

@@ -7,14 +7,17 @@
 <h:head>
     <title>Iniciar Sesión</title>
 </h:head>
-<h:body>
+<h:body style="display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;">
+    <div style="position: absolute; top: 10px; right: 15%;">
+        <h:graphicImage library="images" name="logoDebates.jpg" alt="Logo Debates" style="width: 200px;"/>
+    </div>
     <h:form>
-        <p:panel header="Login" style="width: 400px; margin: 0 auto;">
+        <p:panel header="Login" style="width: 400px;">
             <p:messages globalOnly="true" showDetail="false" showSummary="true" closable="true">
                 <p:autoUpdate />
             </p:messages>
             
-            <h:panelGrid columns="3" cellpadding="5">
+            <h:panelGrid columns="3" cellpadding="5" style="margin: 15% auto 0 auto;">
                 <p:outputLabel for="nombre" value="Nombre:" />
                 <p:inputText id="nombre" value="#{loginBean.nombre}" required="true" 
                              requiredMessage="El nombre es obligatorio" />

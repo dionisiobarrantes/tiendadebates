@@ -5,6 +5,7 @@ import jakarta.annotation.Resource;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -25,6 +26,9 @@ public class PedidoBean implements Serializable {
     @Resource
     private UserTransaction utx;
 
+    @Inject
+    private LoginBean loginBean;
+
     private List<Pedido> pedidos;
     private Pedido selectedPedido;
     private List<LineasPedido> detalles;
@@ -36,10 +40,44 @@ public class PedidoBean implements Serializable {
 
     public void cargarPedidos() {
         try {
-            pedidos = em.createQuery("SELECT p FROM Pedido p ORDER BY p.fechapedido DESC, p.idpedido DESC", Pedido.class).getResultList();
+            if (loginBean.isAdministrador()) {
+                pedidos = em.createQuery("SELECT p FROM Pedido p ORDER BY p.fechapedido DESC, p.idpedido DESC", Pedido.class).getResultList();
+            } else if (loginBean.getUsuarioLogueado() != null) {
+                pedidos = em.createQuery("SELECT p FROM Pedido p WHERE p.cliente = :idcliente ORDER BY p.fechapedido DESC, p.idpedido DESC", Pedido.class)
+                        .setParameter("idcliente", loginBean.getUsuarioLogueado().getIdclientes())
+                        .getResultList();
+            } else {
+                pedidos = new ArrayList<>();
+            }
+            calcularEstados();
         } catch (Exception e) {
             System.err.println("[DEBUG_LOG] Error al cargar pedidos: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    private void calcularEstados() {
+        if (pedidos == null) return;
+        for (Pedido p : pedidos) {
+            List<LineasPedido> lines = em.createQuery("SELECT l FROM LineasPedido l WHERE l.idpedido = :id", LineasPedido.class)
+                    .setParameter("id", p.getIdpedido())
+                    .getResultList();
+            
+            if (lines.isEmpty()) {
+                p.setEstado("C Pendiente"); // Ocurre si no hay líneas aún
+                continue;
+            }
+
+            long total = lines.size();
+            long enviados = lines.stream().filter(l -> Boolean.TRUE.equals(l.getEnviado())).count();
+
+            if (enviados == total) {
+                p.setEstado("A Servido");
+            } else if (enviados == 0) {
+                p.setEstado("C Pendiente");
+            } else {
+                p.setEstado("B Parcialmente servido");
+            }
         }
     }
 

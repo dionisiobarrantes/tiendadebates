@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Direcciones de Clientes</title>
+</h:head>
+<h:body>
+    <h:form id="form">
+        <p:panel header="Direcciones de Clientes">
+            <h:panelGroup layout="block" style="margin-bottom: 10px;">
+                <p:commandButton value="Volver a Artículos" icon="pi pi-arrow-left" action="index?faces-redirect=true" />
+            </h:panelGroup>
+
+            <p:dataTable id="direccionesDT" value="#{direccionBean.clientesDirecciones}" var="item"
+                         emptyMessage="No se encontraron datos."
+                         stripedRows="true" paginator="true" rows="10"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} clientes">
+
+                <p:column headerText="ID Cliente" sortBy="#{item.cliente.idclientes}" style="width:100px;text-align:center">
+                    <h:outputText value="#{item.cliente.idclientes}" />
+                </p:column>
+                
+                <p:column headerText="Nombre Cliente" sortBy="#{item.cliente.nombre}">
+                    <h:outputText value="#{item.cliente.nombre}" />
+                </p:column>
+
+                <p:column headerText="Calle">
+                    <h:outputText value="#{item.direccion.calle}" />
+                </p:column>
+
+                <p:column headerText="Población">
+                    <h:outputText value="#{item.direccion.poblacion}" />
+                </p:column>
+
+                <p:column headerText="Código Postal">
+                    <h:outputText value="#{item.direccion.codpostal}" />
+                </p:column>
+
+                <p:column headerText="Provincia">
+                    <h:outputText value="#{item.direccion.provincia}" />
+                </p:column>
+
+            </p:dataTable>
+        </p:panel>
+    </h:form>
+</h:body>
+</html>

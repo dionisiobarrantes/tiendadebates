@@ -9,6 +9,7 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.example.entity.Cliente;
+import org.example.entity.Direccion;
 import java.io.Serializable;
 
 @Named
@@ -21,6 +22,7 @@ public class LoginBean implements Serializable {
     private String nombre;
     private String password;
     private Cliente usuarioLogueado;
+    private Direccion direccionLogueado;
 
     public String login() {
         try {
@@ -31,6 +33,17 @@ public class LoginBean implements Serializable {
                     .getSingleResult();
 
             if (usuarioLogueado != null) {
+                try {
+                    direccionLogueado = em.createQuery("SELECT d FROM Direccion d WHERE d.idcliente = :id", Direccion.class)
+                            .setParameter("id", usuarioLogueado.getIdclientes())
+                            .getSingleResult();
+                } catch (NoResultException e) {
+                    direccionLogueado = new Direccion();
+                    direccionLogueado.setIdcliente(usuarioLogueado.getIdclientes());
+                } catch (Exception e) {
+                    direccionLogueado = new Direccion();
+                    direccionLogueado.setIdcliente(usuarioLogueado.getIdclientes());
+                }
                 return "confirmarDireccion?faces-redirect=true";
             }
         } catch (NoResultException e) {
@@ -45,9 +58,9 @@ public class LoginBean implements Serializable {
     }
 
     @Transactional
-    public String actualizarDireccionYEntrar() {
+    public String actualizarDireccion() {
         try {
-            em.merge(usuarioLogueado);
+            em.merge(direccionLogueado);
             return "index?faces-redirect=true";
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
@@ -55,6 +68,14 @@ public class LoginBean implements Serializable {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Direccion getDireccionLogueado() {
+        return direccionLogueado;
+    }
+
+    public void setDireccionLogueado(Direccion direccionLogueado) {
+        this.direccionLogueado = direccionLogueado;
     }
 
     public boolean isAdministrador() {
@@ -83,5 +104,10 @@ public class LoginBean implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String logout() {
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        return "login?faces-redirect=true";
     }
 }

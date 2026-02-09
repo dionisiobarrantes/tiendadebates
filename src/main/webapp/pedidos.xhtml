@@ -8,11 +8,19 @@
     <title>Lista de Pedidos</title>
 </h:head>
 <h:body>
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{pedidoBean.cargarPedidos}" />
+    </f:metadata>
     <h:form id="form">
-        <p:panel header="Pedidos Realizados">
-            <h:panelGroup layout="block" style="margin-bottom: 10px;">
-                <p:commandButton value="Volver a Artículos" icon="pi pi-arrow-left" action="index?faces-redirect=true" />
-            </h:panelGroup>
+        <p:panel id="pedidosPanel">
+            <f:facet name="header">
+                <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                    <div style="display: flex; align-items: center;">
+                        <h:outputText value="Pedidos Realizados" style="font-weight: bold; margin-right: 20px;" />
+                        <p:commandButton value="Volver a Artículos" icon="pi pi-arrow-left" action="index?faces-redirect=true" />
+                    </div>
+                </div>
+            </f:facet>
 
             <p:dataTable id="pedidosDT" value="#{pedidoBean.pedidos}" var="pedido"
                          emptyMessage="No se encontraron pedidos."
@@ -37,6 +45,30 @@
                     <h:outputText value="#{pedido.fechapedido}">
                         <f:convertDateTime pattern="dd/MM/yyyy" />
                     </h:outputText>
+                </p:column>
+
+                <p:column headerText="Estado" sortBy="#{pedido.estado}" style="text-align:center">
+                    <f:facet name="header">
+                        <h:outputText value="Estado" style="display: block; margin-bottom: 5px; text-align: center;"/>
+                        <h:panelGroup layout="block" style="display: flex; flex-direction: column; align-items: center; font-size: 0.8em; font-weight: normal;">
+                            <div style="display: inline-block; text-align: left;">
+                                <div style="display: flex; align-items: center;">
+                                    <i class="pi pi-circle-fill" style="color: green; margin-right: 5px;"></i>
+                                    <h:outputText value="Servido" />
+                                </div>
+                                <div style="display: flex; align-items: center;">
+                                    <i class="pi pi-circle-fill" style="color: orange; margin-right: 5px;"></i>
+                                    <h:outputText value="Parcialmente servido" />
+                                </div>
+                                <div style="display: flex; align-items: center;">
+                                    <i class="pi pi-circle-fill" style="color: red; margin-right: 5px;"></i>
+                                    <h:outputText value="Pendiente" />
+                                </div>
+                            </div>
+                        </h:panelGroup>
+                    </f:facet>
+                    <i class="pi pi-circle-fill" 
+                       style="color: #{pedido.estado.startsWith('A') ? 'green' : (pedido.estado.startsWith('B') ? 'orange' : 'red')};"></i>
                 </p:column>
 
                 <p:column headerText="Acciones" style="width:150px;text-align:center">

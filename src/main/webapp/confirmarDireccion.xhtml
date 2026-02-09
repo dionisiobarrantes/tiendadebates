@@ -15,13 +15,28 @@
             </p:messages>
             
             <h:panelGrid columns="2" cellpadding="5" style="width: 100%">
-                <p:outputLabel for="direccion" value="Dirección:" />
-                <p:inputText id="direccion" value="#{loginBean.usuarioLogueado.direccion}" 
-                             required="true" requiredMessage="La dirección es obligatoria"
+                <p:outputLabel for="calle" value="Calle:" />
+                <p:inputText id="calle" value="#{loginBean.direccionLogueado.calle}" 
+                             required="true" requiredMessage="La calle es obligatoria"
+                             style="width: 100%" />
+
+                <p:outputLabel for="poblacion" value="Población:" />
+                <p:inputText id="poblacion" value="#{loginBean.direccionLogueado.poblacion}" 
+                             required="true" requiredMessage="La población es obligatoria"
+                             style="width: 100%" />
+
+                <p:outputLabel for="codpostal" value="Código Postal:" />
+                <p:inputText id="codpostal" value="#{loginBean.direccionLogueado.codpostal}" 
+                             required="true" requiredMessage="El código postal es obligatorio"
+                             style="width: 100%" />
+
+                <p:outputLabel for="provincia" value="Provincia:" />
+                <p:inputText id="provincia" value="#{loginBean.direccionLogueado.provincia}" 
+                             required="true" requiredMessage="La provincia es obligatoria"
                              style="width: 100%" />
                 
                 <f:facet name="footer">
-                    <p:commandButton value="Entrar" action="#{loginBean.actualizarDireccionYEntrar}" 
+                    <p:commandButton value="Entrar" action="#{loginBean.actualizarDireccion}"
                                      update="@form" style="width: 100%" />
                 </f:facet>
             </h:panelGrid>

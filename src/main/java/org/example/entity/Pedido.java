@@ -25,7 +25,18 @@ public class Pedido {
     @Column(name = "observaciones")
     private String observaciones;
 
+    @Transient
+    private String estado;
+
     public Pedido() {
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     public Integer getIdpedido() {
